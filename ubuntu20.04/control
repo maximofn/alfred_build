@@ -1,0 +1,7 @@
+Package: alfred
+Version: 1.0
+Architecture: all
+Maintainer: MaximoFN <maximofn@gmail.com>
+Description: Personal assistant for the console
+ A personal assistant for the console that uses chat gpt. You need an API KEY of openai for use Alfred
+Depends: python3, python3-pip, python3-setuptools
