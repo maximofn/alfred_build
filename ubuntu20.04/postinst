@@ -16,6 +16,10 @@ echo "Installing Python dependencies..."
 
 # Copiar archivos fuentes a /usr/share/alfred
 echo "Copying source files to /usr/share/alfred..."
+# Check if /usr/share/alfred exists
+if [ -d "/usr/share/alfred" ]; then
+    rm -r /usr/share/alfred
+fi
 cd /usr/src
 git clone https://github.com/maximofn/alfred.git
 cd /usr/src/alfred
@@ -23,6 +27,4 @@ find . -depth -not -name '*.py' -delete
 
 # Crear enlace simbólico para que los usuarios puedan ejecutar el programa escribiendo 'alfred'
 echo "Creating symbolic link to /usr/bin/alfred..."
-# echo 'export PATH="$PATH:/usr/src/alfred"' >> ~/.bashrc # && source ~/.bashrc
 echo 'alias alfred="/usr/src/alfred/alfred.py"' >> ~/.bashrc # && source ~/.bashrc
-# ln -s /usr/bin/alfred/alfred.py /usr/bin/alfred
