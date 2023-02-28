@@ -1,11 +1,13 @@
-FROM ubuntu:20.04
+FROM fedora:36
 
 WORKDIR /home
 
-COPY alfred/alfred.py .
-COPY alfred_build/debian/control .
-COPY alfred_build/debian/postinst .
-COPY alfred_build/debian/alfred.install .
+RUN mkdir -p ~/rpmbuild/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
+
+COPY alfred/alfred.py ~/rpmbuild/SOURCES/
+COPY alfred_build/ubuntu20.04/control .
+COPY alfred_build/ubuntu20.04/postinst .
+COPY alfred_build/ubuntu20.04/alfred.install .
 
 RUN mkdir /usr/bin/alfred
 RUN mkdir /usr/bin/alfred/DEBIAN
@@ -14,5 +16,6 @@ RUN mv control /usr/bin/alfred/DEBIAN/
 RUN mv postinst /usr/bin/alfred/DEBIAN/
 RUN mv alfred.install /usr/bin/alfred/DEBIAN/
 RUN chmod +x /usr/bin/alfred/alfred.py /usr/bin/alfred/DEBIAN/control /usr/bin/alfred/DEBIAN/postinst /usr/bin/alfred/DEBIAN/alfred.install
+
 
 RUN cd /usr/bin/alfred && dpkg-deb --build . /home/alfred.deb && chmod +x /home/alfred.deb
