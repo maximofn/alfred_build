@@ -15,4 +15,4 @@ RUN mv postinst /usr/bin/alfred/DEBIAN/
 RUN mv alfred.install /usr/bin/alfred/DEBIAN/
 RUN chmod +x /usr/bin/alfred/alfred.py /usr/bin/alfred/DEBIAN/control /usr/bin/alfred/DEBIAN/postinst /usr/bin/alfred/DEBIAN/alfred.install
 
-RUN cd /usr/bin/alfred && dpkg-deb --build . /home/alfred.deb && chmod +x /home/alfred.deb
+RUN cd /usr/bin/alfred && dpkg-deb --build . /home/alfredv1_3.deb && chmod +x /home/alfredv1_3.deb

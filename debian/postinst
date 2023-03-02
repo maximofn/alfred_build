@@ -22,7 +22,7 @@ if [ -d "/usr/src/alfred" ]; then
     echo "Removing /usr/share/alfred..."
 fi
 cd /usr/src
-git clone https://github.com/maximofn/alfred.git
+git clone -b branch_v1.3 https://github.com/maximofn/alfred.git
 cd /usr/src/alfred
 find . -depth -not -name '*.py' -delete
 
