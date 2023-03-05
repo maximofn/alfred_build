@@ -1,21 +1,16 @@
 FROM fedora:36
 
-WORKDIR /home
+# WORKDIR /home
 
-RUN mkdir -p ~/rpmbuild/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
+RUN dnf update -y && dnf install -y rpm-build git && dnf clean all
 
-COPY alfred/alfred.py ~/rpmbuild/SOURCES/
-COPY alfred_build/ubuntu20.04/control .
-COPY alfred_build/ubuntu20.04/postinst .
-COPY alfred_build/ubuntu20.04/alfred.install .
+RUN mkdir -p /root/rpmbuild/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
+COPY alfred/alfred.py /root/rpmbuild/SOURCES/
+RUN mkdir /tmp/alfred
+RUN mkdir /tmp/alfred/alfred-1.3
+COPY alfred/alfred.py /tmp/alfred/alfred-1.3
+RUN cd /tmp/alfred && tar -czvf /root/rpmbuild/SOURCES/alfred-1.3.tar.gz alfred-1.3
+RUN chmod 777 /root/rpmbuild/SOURCES/alfred-1.3.tar.gz
+COPY alfred_build/fedora/alfred.spec /root/rpmbuild/SPECS/
 
-RUN mkdir /usr/bin/alfred
-RUN mkdir /usr/bin/alfred/DEBIAN
-RUN mv alfred.py /usr/bin/alfred/alfred.py
-RUN mv control /usr/bin/alfred/DEBIAN/
-RUN mv postinst /usr/bin/alfred/DEBIAN/
-RUN mv alfred.install /usr/bin/alfred/DEBIAN/
-RUN chmod +x /usr/bin/alfred/alfred.py /usr/bin/alfred/DEBIAN/control /usr/bin/alfred/DEBIAN/postinst /usr/bin/alfred/DEBIAN/alfred.install
-
-
-RUN cd /usr/bin/alfred && dpkg-deb --build . /home/alfred.deb && chmod +x /home/alfred.deb
+RUN rpmbuild -ba /root/rpmbuild/SPECS/alfred.spec && chmod +x /root/rpmbuild/RPMS/x86_64/alfred-1.3-1.fc36.x86_64.rpm
