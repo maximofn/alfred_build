@@ -24,4 +24,5 @@ find . -depth -not -name '*.py' -delete
 
 # Crear enlace simbólico para que los usuarios puedan ejecutar el programa escribiendo 'alfred'
 echo "Creating symbolic link to /usr/bin/alfred..."
-echo 'alias alfred="/usr/src/alfred/alfred.py"' >> ~/.bashrc
+USER=$SUDO_USER
+echo 'alias alfred="/usr/src/alfred/alfred.py"' >> /home/$USER/.bashrc

@@ -57,7 +57,8 @@ find . -depth -not -name '*.py' -delete\n\
 \n\
 # Crear enlace simbólico para que los usuarios puedan ejecutar el programa escribiendo '{PACKAGE}'\n\
 echo \"Creating symbolic link to /usr/bin/{PACKAGE}...\"\n\
-echo 'alias {PACKAGE}=\"/usr/src/{PACKAGE}/{PACKAGE}.py\"' >> ~/.bashrc"
+USER=$SUDO_USER\n\
+echo 'alias {PACKAGE}=\"/usr/src/{PACKAGE}/{PACKAGE}.py\"' >> /home/$USER/.bashrc"
 with open("debian/postinst", "w") as f:
     f.write(text)
 
@@ -214,7 +215,7 @@ RUN cd /tmp/{PACKAGE} && tar -czvf /root/rpmbuild/SOURCES/{PACKAGE}-{VERSION}.{R
 RUN chmod 777 /root/rpmbuild/SOURCES/{PACKAGE}-{VERSION}.{RELEASE}.tar.gz\n\
 COPY {PACKAGE}_build/fedora/{PACKAGE}.spec /root/rpmbuild/SPECS/\n\
 \n\
-RUN rpmbuild -ba /root/rpmbuild/SPECS/{PACKAGE}.spec && chmod +x /root/rpmbuild/RPMS/x86_64/{PACKAGE}-{VERSION}.{RELEASE}-1.fc36.x86_64.rpm"
+RUN rpmbuild -ba /root/rpmbuild/SPECS/{PACKAGE}.spec && chmod +x /root/rpmbuild/RPMS/x86_64/{PACKAGE}-{VERSION}.{RELEASE}-{RELEASE}.fc36.x86_64.rpm"
 with open("docker/Dockerfile.fedora_build", "w") as f:
     f.write(text)
 
@@ -225,11 +226,11 @@ WORKDIR /home\n\
 \n\
 RUN dnf update -y && dnf install -y python3 python3-pip git && dnf clean all\n\
 \n\
-COPY {PACKAGE}_build/fedora/{PACKAGE}-{VERSION}.{RELEASE}-1.fc36.x86_64.rpm .\n\
+COPY {PACKAGE}_build/fedora/{PACKAGE}-{VERSION}.{RELEASE}-{RELEASE}.fc36.x86_64.rpm .\n\
 \n\
-RUN chmod +x {PACKAGE}-{VERSION}.{RELEASE}-1.fc36.x86_64.rpm \n\
-RUN rpm -i {PACKAGE}-{VERSION}.{RELEASE}-1.fc36.x86_64.rpm\n\
-RUN rm {PACKAGE}-{VERSION}.{RELEASE}-1.fc36.x86_64.rpm"
+RUN chmod +x {PACKAGE}-{VERSION}.{RELEASE}-{RELEASE}.fc36.x86_64.rpm \n\
+RUN rpm -i {PACKAGE}-{VERSION}.{RELEASE}-{RELEASE}.fc36.x86_64.rpm\n\
+RUN rm {PACKAGE}-{VERSION}.{RELEASE}-{RELEASE}.fc36.x86_64.rpm"
 with open("docker/Dockerfile.fedora_test1", "w") as f:
     f.write(text)
 
@@ -240,14 +241,14 @@ WORKDIR /home\n\
 \n\
 RUN dnf update -y && dnf install -y python3 python3-pip git && dnf clean all\n\
 \n\
-COPY {PACKAGE}_build/fedora/{PACKAGE}-{VERSION}.{RELEASE}-1.fc36.x86_64.rpm .\n\
+COPY {PACKAGE}_build/fedora/{PACKAGE}-{VERSION}.{RELEASE}-{RELEASE}.fc36.x86_64.rpm .\n\
 \n\
 RUN /usr/bin/python3 -m pip install halo\n\
 RUN /usr/bin/python3 -m pip install --upgrade openai\n\
 \n\
-RUN chmod +x {PACKAGE}-{VERSION}.{RELEASE}-1.fc36.x86_64.rpm \n\
-RUN rpm -i {PACKAGE}-{VERSION}.{RELEASE}-1.fc36.x86_64.rpm\n\
-RUN rm {PACKAGE}-{VERSION}.{RELEASE}-1.fc36.x86_64.rpm"
+RUN chmod +x {PACKAGE}-{VERSION}.{RELEASE}-{RELEASE}.fc36.x86_64.rpm \n\
+RUN rpm -i {PACKAGE}-{VERSION}.{RELEASE}-{RELEASE}.fc36.x86_64.rpm\n\
+RUN rm {PACKAGE}-{VERSION}.{RELEASE}-{RELEASE}.fc36.x86_64.rpm"
 with open("docker/Dockerfile.fedora_test2", "w") as f:
     f.write(text)
 
@@ -258,12 +259,31 @@ WORKDIR /home\n\
 \n\
 RUN dnf update -y && dnf install -y python3 python3-pip git && dnf clean all\n\
 \n\
-COPY {PACKAGE}_build/fedora/{PACKAGE}-{VERSION}.{RELEASE}-1.fc36.x86_64.rpm .\n\
+COPY {PACKAGE}_build/fedora/{PACKAGE}-{VERSION}.{RELEASE}-{RELEASE}.fc36.x86_64.rpm .\n\
 \n\
 RUN cd /usr/src && git clone {URL}.git\n\
 \n\
-RUN chmod +x {PACKAGE}-{VERSION}.{RELEASE}-1.fc36.x86_64.rpm \n\
-RUN rpm -i {PACKAGE}-{VERSION}.{RELEASE}-1.fc36.x86_64.rpm\n\
-RUN rm {PACKAGE}-{VERSION}.{RELEASE}-1.fc36.x86_64.rpm"
+RUN chmod +x {PACKAGE}-{VERSION}.{RELEASE}-{RELEASE}.fc36.x86_64.rpm \n\
+RUN rpm -i {PACKAGE}-{VERSION}.{RELEASE}-{RELEASE}.fc36.x86_64.rpm\n\
+RUN rm {PACKAGE}-{VERSION}.{RELEASE}-{RELEASE}.fc36.x86_64.rpm"
 with open("docker/Dockerfile.fedora_test3", "w") as f:
+    f.write(text)
+
+# SCRIPTS
+
+## BUILD
+text = f"{'#'}!/bin/bash\n\
+\n\
+# Build ubuntu 20.04 docker image\n\
+rm debian/{PACKAGE}v{VERSION}_{RELEASE}.deb\n\
+docker build -f docker/Dockerfile.ubuntu_build -t maximofn/ubuntu_20_04_build:0.0.1 ../\n\
+docker run -it --rm -v ./debian/:/mnt maximofn/ubuntu_20_04_build:0.0.1 cp /home/{PACKAGE}v{VERSION}_{RELEASE}.deb /mnt\n\
+docker image rm maximofn/ubuntu_20_04_build:0.0.1\n\
+\n\
+# Build fedora 36 docker image\n\
+rm fedora/{PACKAGE}-{VERSION}.{RELEASE}-{RELEASE}.fc36.x86_64.rpm\n\
+docker build -f docker/Dockerfile.fedora_build -t maximofn/fedora36_build:0.0.1 ../\n\
+docker run -it --rm -v ./fedora/:/mnt maximofn/fedora36_build:0.0.1 cp /root/rpmbuild/RPMS/x86_64/{PACKAGE}-{VERSION}.{RELEASE}-{RELEASE}.fc36.x86_64.rpm /mnt\n\
+docker image rm maximofn/fedora36_build:0.0.1"
+with open("build_dockers.sh", "w") as f:
     f.write(text)

@@ -11,4 +11,4 @@ RUN cd /tmp/alfred && tar -czvf /root/rpmbuild/SOURCES/alfred-1.3.tar.gz alfred-
 RUN chmod 777 /root/rpmbuild/SOURCES/alfred-1.3.tar.gz
 COPY alfred_build/fedora/alfred.spec /root/rpmbuild/SPECS/
 
-RUN rpmbuild -ba /root/rpmbuild/SPECS/alfred.spec && chmod +x /root/rpmbuild/RPMS/x86_64/alfred-1.3-1.fc36.x86_64.rpm
+RUN rpmbuild -ba /root/rpmbuild/SPECS/alfred.spec && chmod +x /root/rpmbuild/RPMS/x86_64/alfred-1.3-3.fc36.x86_64.rpm
