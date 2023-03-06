@@ -47,7 +47,8 @@ git clone -b branch_v1.3 https://github.com/maximofn/alfred.git
 cd /usr/src/alfred
 find . -depth -not -name '*.py' -delete
 echo "Creating symbolic link to /usr/bin/alfred..."
-echo 'alias alfred="/usr/src/alfred/alfred.py"' >> ~/.bashrc
+USER=$SUDO_USER
+echo 'alias alfred="/usr/src/alfred/alfred.py"' >> /home/$USER/.bashrc
 echo "The alfred package has been successfully installed."
 
 %preun

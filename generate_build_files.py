@@ -114,7 +114,8 @@ git clone -b branch_v{VERSION}.{RELEASE} {URL}.git\n\
 cd /usr/src/alfred\n\
 find . -depth -not -name '*.py' -delete\n\
 echo \"Creating symbolic link to /usr/bin/{PACKAGE}...\"\n\
-echo 'alias alfred=\"/usr/src/{PACKAGE}/{PACKAGE}.py\"' >> ~/.bashrc\n\
+USER=$SUDO_USER\n\
+echo 'alias alfred=\"/usr/src/{PACKAGE}/{PACKAGE}.py\"' >> /home/$USER/.bashrc\n\
 echo \"The alfred package has been successfully installed.\"\n\
 \n\
 %preun\n\
