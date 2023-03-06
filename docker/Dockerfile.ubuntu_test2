@@ -9,7 +9,6 @@ COPY alfred_build/debian/alfredv1_3.deb .
 RUN /usr/bin/python3 -m pip install halo
 RUN /usr/bin/python3 -m pip install --upgrade openai
 
-RUN chmod +x alfredv1_3.deb 
+RUN chmod +x alfredv1_3.deb
 RUN dpkg -i alfredv1_3.deb
 RUN rm alfredv1_3.deb
-# CMD ["alfred"]

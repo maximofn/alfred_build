@@ -1,6 +1,6 @@
 echo "Deploying Alfred"
-echo "Generating config files"
-./generate_config_files.sh
+echo "Generating build files"
+./generate_build_files.py
 echo "Building dockers"
 ./build_dockers.sh
 echo "Testing dockers"

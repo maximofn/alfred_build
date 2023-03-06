@@ -1,7 +1,5 @@
 FROM fedora:36
 
-# WORKDIR /home
-
 RUN dnf update -y && dnf install -y rpm-build git && dnf clean all
 
 RUN mkdir -p /root/rpmbuild/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}

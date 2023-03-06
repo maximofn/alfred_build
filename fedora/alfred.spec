@@ -1,6 +1,6 @@
 Name: alfred
 Version: 1.3
-Release: 1%{?dist}
+Release: 3%{?dist}
 Summary: Personal assistant for the console
 
 License: GPL
@@ -8,10 +8,10 @@ URL: https://github.com/maximofn/alfred
 Source0: %{name}-%{version}.tar.gz
 
 # Paquetes requeridos
-Requires: python3, python3-pip
+Requires: python3, python3-pip, python3-setuptools
 
 %description
-A personal assistant for the console that uses chat gpt. You need an API KEY of openai for use Alfred.
+A personal assistant for the console that uses chat gpt. You need an API KEY of openai for use Alfred
 
 %prep
 %autosetup

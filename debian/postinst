@@ -11,15 +11,11 @@ echo "Installing Python dependencies..."
 /usr/bin/python3 -m pip install halo
 /usr/bin/python3 -m pip install --upgrade openai
 
-# Dar permisos de ejecución al archivo principal de tu programa
-# chmod +x /usr/bin/alfred/alfred.py
-
 # Copiar archivos fuentes a /usr/share/alfred
 echo "Copying source files to /usr/share/alfred..."
-# Check if /usr/share/alfred exists
 if [ -d "/usr/src/alfred" ]; then
-    rm -r /usr/src/alfred
     echo "Removing /usr/share/alfred..."
+    rm -r /usr/src/alfred
 fi
 cd /usr/src
 git clone -b branch_v1.3 https://github.com/maximofn/alfred.git
